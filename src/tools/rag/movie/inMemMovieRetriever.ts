@@ -77,7 +77,7 @@ const embeddings = new OpenAIEmbeddings()
 
 const documentContents = "Brief summary of a movie"
 
-export const inMemSelfQueryRetriever = async (llm : any) => {
+export const inMemMovieRetriever = async (llm : any) => {
 
   const vectorStore = await MemoryVectorStore.fromDocuments(docs, embeddings)
 

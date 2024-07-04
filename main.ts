@@ -7,7 +7,8 @@ import { pull } from "langchain/hub";
 
 import { createOpenAIFunctionsAgent,AgentExecutor } from "langchain/agents"
 
-import { inMemSelfQueryRetriever } from './src/tools/rag/inMemSelfQuerying'
+import { inMemMovieRetriever } from './src/tools/rag/movie/inMemMovieRetriever'
+import { inMemFundRetriever } from './src/tools/rag/fund/inMemFundRetriever'
 
 const llm = new ChatOpenAI({
 	apiKey: process.env.OPENAI_API_KEY,
@@ -24,9 +25,10 @@ const simpleAI = async function() {
 
 const execution = async function(){
 
-	const retrieverTool = await inMemSelfQueryRetriever(llm)
+	const movieRetrieverTool = await inMemMovieRetriever(llm)
+	const fundRetrieverTool = await inMemFundRetriever(llm)
 
-	const tools = [retrieverTool];
+	const tools = [movieRetrieverTool,fundRetrieverTool];
 
 	const prompt = await pull<ChatPromptTemplate>(
   		"hwchase17/openai-functions-agent"
@@ -44,7 +46,7 @@ const execution = async function(){
 	});
 
 	const result1 = await agentExecutor.invoke({
-	  input: "hi!",
+	  input: "what is Finnomena? told me in 5 word",
 	});
 
 	console.log("result1 > ",result1);
@@ -54,6 +56,18 @@ const execution = async function(){
 	});
 
 	console.log("result2 > " ,result2);
+
+	const result3 = await agentExecutor.invoke({
+	  input: "How many type of funds we have ?",
+	});
+
+	console.log("result3 > " ,result3);
+
+	const result4 = await agentExecutor.invoke({
+	  input: "How many type of funds we have ? show only couting",
+	});
+
+	console.log("result4 > " ,result4);
 }
 
 // simpleAI()
