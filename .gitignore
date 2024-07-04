@@ -1,0 +1,14 @@
+node_modules
+*.log*
+.nuxt
+.nitro
+.cache
+.output
+.env
+dist
+.DS_Store
+.fleet
+.idea
+pnpm-lock
+.vscode
+package-lock.json
