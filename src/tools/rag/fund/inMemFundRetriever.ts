@@ -11,22 +11,22 @@ const docs = [
   new Document({
     pageContent:
       "SCB Retirement Fixed Income",
-    metadata: { shortCode: "SCBRF", provider: "SCB Asset Management Co., Ltd." , type: "Equity Funds" },
+    metadata: { shortCode: "SCBRF", provider: "SCB" ,company: "SCB Asset Management Co., Ltd." , type: "Equity Funds" },
   }),
   new Document({
     pageContent:
       "SCB Short Term Fixed Income",
-    metadata: { shortCode: "SCBSFF", provider: "SCB Asset Management Co., Ltd." , type: "Fixed Income Funds" },
+    metadata: { shortCode: "SCBSFF", provider: "SCB" ,company: "SCB Asset Management Co., Ltd." , type: "Fixed Income Funds" },
   }),
   new Document({
     pageContent:
       "K Fixed Income RMF",
-    metadata: { shortCode: "KFIRMF", provider: "Kasikorn Asset Management Co. Ltd" , type: "Fixed Income Funds" },
+    metadata: { shortCode: "KFIRMF", provider: "Kasikorn" ,company: "Kasikorn Asset Management Co. Ltd" , type: "Fixed Income Funds" },
   }),
   new Document({
     pageContent:
       "K SET 50 Index",
-    metadata: { shortCode: "K-SET50", provider: "Krungthai Asset Management PLC" , type: "Mixed Funds" },
+    metadata: { shortCode: "K-SET50", provider: "Krungthai" ,company: "Krungthai Asset Management PLC" , type: "Mixed Funds" },
   }),
 ]
 
@@ -38,7 +38,12 @@ const attributeInfo: AttributeInfo[] = [
   },
   {
     name: "provider",
-    description: "the provider company of fund",
+    description: "the provider of fund",
+    type: "string",
+  },
+  {
+    name: "company",
+    description: "the full name of provider company of fund",
     type: "string",
   },
   {
@@ -49,8 +54,9 @@ const attributeInfo: AttributeInfo[] = [
 ]
 
 const embeddings = new OpenAIEmbeddings()
-
-const documentContents = "Brief summary of a fund"
+const documentContents = "List of a funds"
+// const documentContents = "Brief summary of a funds"
+// const documentContents = "Brief summary of a fund"
 
 export const inMemFundRetriever = async (llm : any) => {
 
@@ -64,10 +70,18 @@ export const inMemFundRetriever = async (llm : any) => {
     structuredQueryTranslator: new FunctionalTranslator(),
   })
 
+  // const query1 = await selfQueryRetriever.invoke(
+  //   "How many funds from provider SCB we have ?"
+  // );
+
+  // console.log("query1", query1);
+
   const retrieverTool = createRetrieverTool(selfQueryRetriever, {
-    name: "fund_search",
+    name: "funds_search",
+    // description:
+    //   "useful for what you want to answer queries about funds",
     description:
-      "useful for what you want to answer queries about fund",
+      "Search for information about funds. For any questions about funds, you must use this tool!",
   });
 
   return retrieverTool
