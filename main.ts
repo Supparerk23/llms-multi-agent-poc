@@ -2,10 +2,10 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 import { ChatOpenAI } from "@langchain/openai"
 
-import type { ChatPromptTemplate } from "@langchain/core/prompts";
+import type { ChatPromptTemplate,PromptTemplate } from "@langchain/core/prompts";
 import { pull } from "langchain/hub";
 
-import { createOpenAIFunctionsAgent,AgentExecutor } from "langchain/agents"
+import { createOpenAIFunctionsAgent,createReactAgent,AgentExecutor } from "langchain/agents"
 
 import { inMemMovieRetriever } from './src/tools/rag/movie/inMemMovieRetriever'
 import { inMemFundRetriever } from './src/tools/rag/fund/inMemFundRetriever'
@@ -15,7 +15,7 @@ import { HumanMessage, AIMessage } from "@langchain/core/messages";
 const llm = new ChatOpenAI({
 	apiKey: process.env.OPENAI_API_KEY,
 	model: "gpt-3.5-turbo",
-  	temperature: 0,
+  	temperature: 1,
 })
 
 
@@ -42,6 +42,14 @@ const execution = async function(){
 	  tools,
 	  prompt,
 	});
+
+	// const prompt = await pull<PromptTemplate>("hwchase17/react");
+
+	// const agent = await createReactAgent({
+	//   llm,
+	//   tools,
+	//   prompt,
+	// });
 
 	const agentExecutor = new AgentExecutor({
 	  agent,
